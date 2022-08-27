@@ -1,0 +1,40 @@
+{
+    "type": "object",
+    "properties": {
+        "settings": {
+            "type": "object",
+        },
+        "citazions": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "text": {
+                        "type": "string"
+                    },
+                    "notes": {
+                        "type": "string"
+                    },
+                    "url": {
+                        "type": "string"
+                    },
+                    "author": {
+                        "type": "string"
+                    },
+                    "postTimestamp": {
+                        "type": "integer"
+                    },
+                    "tags": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "timestamp": {
+                        "type": "integer"
+                    }
+                }
+            }
+        }
+    }
+}
