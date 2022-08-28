@@ -5,19 +5,19 @@
 
   "action": {
     "default_icon": {
-      "16": "images/icon16.png",
-      "24": "images/icon24.png",
-      "32": "images/icon32.png"
+      "16": "images/logo/logo16.png",
+      "24": "images/logo/logo24.png",
+      "32": "images/logo/logo32.png"
     },
     "default_title": "Show saved citazions",
     "default_popup": "popup.html"
   },
   "description": "Use citiClip to save and manage your citazions",
   "icons": {
-    "16": "images/icon16.png",
-    "32": "images/icon32.png",
-    "48": "images/icon48.png",
-    "128": "images/icon128.png"
+    "16": "images/logo/logo16.png",
+    "32": "images/logo/logo32.png",
+    "48": "images/logo/logo48.png",
+    "128": "images/logo/logo128.png"
   },
     "permissions": [
         "storage",
@@ -28,9 +28,6 @@
   "background": {
     "service_worker": "background.js",
     "type": "module"
-  },
-  "storage": {
-    "managed_schema": "schema.json"
   },
   "offline_enabled": true,
   "omnibox": {

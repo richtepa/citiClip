@@ -10,6 +10,12 @@ console.log(citiList.PATH);
 document.getElementById("button").onclick = function(){
     addCiti();
 }
+document.getElementById("page").onclick = function(){
+    chrome.tabs.create({
+            url: "list.html",
+            selected: true
+    });
+}
 
 window.onload = function(){
     showAllCitis();
@@ -18,6 +24,9 @@ window.onload = function(){
 
 async function addCiti(){
     let url = await helper.getURL();
+    let page = {
+        "url": url
+    };
     let citi = {
         "text": "text",
         "notes": "notesBuffer",
@@ -25,14 +34,14 @@ async function addCiti(){
         "tags": [],
         "timestamp": new Date().valueOf()
     }
-    citiList.addCiti(citi);
-    citiUI.addCitiToUI(citi);
+    citiList.addCiti(page, citi);
+    citiUI.addCitiToUI(page, citi);
 }
 
 async function showAllCitis(){
     let list = await citiList.getList();
-    for(let citi of list){
-        citiUI.addCitiToUI(citi);
+    for(let page of list){
+        citiUI.addPageToUI(page);
     }
 }
 

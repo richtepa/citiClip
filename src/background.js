@@ -10,12 +10,16 @@ chrome.runtime.onInstalled.addListener(function() {
 });
     
 chrome.contextMenus.onClicked.addListener(function(info, tab) {
+    let page = {
+        "url": tab.url,
+        "title": tab.title,
+        "favicon": tab.favIconUrl
+    }
     let citi = {
         "text": info.selectionText,
         "notes": "notesBuffer",
-        "url": tab.url,
         "tags": [],
         "timestamp": new Date().valueOf()
-    }
-    citiList.addCiti(citi);
+    };
+    citiList.addCiti(page, citi);
 })

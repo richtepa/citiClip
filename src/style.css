@@ -1,0 +1,93 @@
+body{
+    margin: 0px;
+    font-family: sans-serif;
+}
+
+#list{
+    margin: 5em;
+}
+
+.page{
+    font-size: 2em;
+    line-height: 2em;
+}
+
+.citi{
+    display: flex;
+    align-items: center;
+}
+
+.timestamp{
+    margin-right: 2em;
+    min-width: 10em;
+    box-sizing: border-box;
+    text-align: center;
+    background-repeat: no-repeat;
+    white-space: nowrap;
+}
+
+.text{
+    margin-right: 2em;
+    font-size: 0.75em;
+    line-height: 1.5em;
+}
+
+.icons{
+    margin-left: auto;
+    display: flex;
+}
+
+.icon{
+    margin: 0 1em;
+}
+
+
+
+
+.pageBox{
+    display: flex;
+    align-items: center;
+}
+
+.favicon{
+    height: 2em;
+    min-width: 10em;
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-right: 2em;
+}
+
+.url {
+    line-height: 0.5em;
+    font-size: 0.5em;
+}
+
+
+
+
+
+
+
+
+
+
+.copy{
+    background-image: url("images/icons/copy.svg");
+}
+.delete{
+    background-image: url("images/icons/delete.svg");
+}
+.comment{
+    background-image: url("images/icons/comment.svg");
+}
+.open{
+    background-image: url("images/icons/open.svg");
+}
+
+.icon{
+    background-position: center;
+    background-size: contain;
+    height: 2em;
+    width: 2em;
+}
