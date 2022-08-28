@@ -91,7 +91,9 @@ export class CitiUI{
 
 
     eventListeners(){
-        let els = document.getElementsByClassName("open");
+        let els;
+        
+        els = document.getElementsByClassName("open");
         for(let el of els){
             el.onclick = function(){
                 let url = el.parentNode.getAttribute("url");
@@ -103,7 +105,21 @@ export class CitiUI{
                 //}
             }
         }
+
+        els = document.getElementsByClassName("copy");
+        for(let el of els){
+            el.onclick = function(){
+                let url = el.parentNode.getAttribute("url");
+                let text = el.parentNode.getAttribute("text");
+
+                let copy;
+                if(text == "undefined"){
+                    copy = url;
+                } else {
+                    copy = text;
+                }
+                navigator.clipboard.writeText(copy);
+            }
+        }
     }
-
-
 }
