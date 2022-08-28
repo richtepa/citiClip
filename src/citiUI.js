@@ -33,7 +33,7 @@ export class CitiUI{
         el.setAttribute("citiID", citi.citiID);
         this.addTimestampToUI(citi.timestamp, el);
         this.addTextToUI(citi.text, citi.comment, el);
-        this.addIconsToUI(el, ["copy", "open", "comment", "delete"], page.data.url, citi.text, citi.citiID);
+        this.addIconsToUI(el, ["comment", "copy", "open", "delete"], page.data.url, citi.text, citi.citiID);
         parent.appendChild(el);
     }
 
@@ -119,7 +119,7 @@ export class CitiUI{
         el.classList.add("pageBox");
         this.addFaviconToUI(page.data.favicon, el);
         this.addPageNameToUI(page.data.title, page.data.url, page.data.latex, el);
-        this.addIconsToUI(el, ["copy", "open", "copyPage", "delete"], page.data.url, undefined, undefined, page.data.title, page.data.timestamp);
+        this.addIconsToUI(el, ["copyPage", "copy", "open", "delete"], page.data.url, undefined, undefined, page.data.title, page.data.timestamp);
         parent.appendChild(el);
     }
 

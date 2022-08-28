@@ -48,7 +48,7 @@ a {
 }
 
 .icon{
-    margin: 0 1em;
+    margin: 0 0.5em;
     cursor: pointer;
 }
 
@@ -122,4 +122,8 @@ a {
 
 .hidden{
     display: none;
+}
+
+.copy{
+    margin-left: 2em;
 }
