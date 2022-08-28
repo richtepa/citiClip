@@ -21,7 +21,8 @@ export class CitiList {
 
     async addCiti(page, citi){
         const list = await this.getList();
-        
+        citi.citiID = citi.timestamp;
+
         let pageExists = false;
         let updatedList = [...list];
         for(let p of updatedList){
@@ -36,6 +37,56 @@ export class CitiList {
                 "data": page,
                 "citis": [citi]
             });
+        }
+
+        return new Promise((resolve, reject) => {
+            chrome.storage.local.set({ [this.PATH]: {"citazions" : updatedList} }, () => {           
+                if (chrome.runtime.lastError){
+                    reject(chrome.runtime.lastError);
+                }
+                resolve(updatedList);
+            });
+        });
+    }
+
+    async removeCiti(url, citiID){
+        const list = await this.getList();
+        
+        let updatedList = [...list];
+        for(let p of updatedList){
+            if(p.data.url == url){
+                for(let i = 0; i < p.citis.length; i++){
+                    if(p.citis[i].citiID == citiID){
+                        p.citis.splice(i, 1);
+                        break;
+                    }
+                }
+                if(p.citis.length == 0){
+                    updatedList.splice(updatedList.indexOf(p), 1);
+                }
+                break;
+            }
+        }
+
+        return new Promise((resolve, reject) => {
+            chrome.storage.local.set({ [this.PATH]: {"citazions" : updatedList} }, () => {           
+                if (chrome.runtime.lastError){
+                    reject(chrome.runtime.lastError);
+                }
+                resolve(updatedList);
+            });
+        });
+    }
+
+    async removePage(url){
+        const list = await this.getList();
+        
+        let updatedList = [...list];
+        for(let p of updatedList){
+            if(p.data.url == url){
+                updatedList.splice(updatedList.indexOf(p), 1);
+                break;
+            }
         }
 
         return new Promise((resolve, reject) => {

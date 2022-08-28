@@ -1,8 +1,14 @@
 export class CitiUI{
 
+
+    constructor(citiList){
+        this.citiList = citiList;
+    }
+
     addPageToUI(page){
         let el = document.createElement("div");
         el.classList.add("page");
+        el.setAttribute("url", page.data.url);
         document.getElementById("list").appendChild(el);
         let citis = page.citis.reverse();
         for(let citi of citis){
@@ -11,14 +17,36 @@ export class CitiUI{
         this.addPageBoxToUI(page, el);
     }
 
+    removePageFromUI(url){
+        let els = document.getElementsByClassName("page");
+        for(let el of els){
+            if(el.getAttribute("url") == url){
+                el.remove();
+            }
+        }
+    }
 
     addCitiToUI(citi, page, parent){
         let el = document.createElement("div");
         el.classList.add("citi");
+        el.setAttribute("url", page.data.url);
+        el.setAttribute("citiID", citi.citiID);
         this.addTimestampToUI(citi.timestamp, el);
         this.addTextToUI(citi.text, el);
-        this.addIconsToUI(el, ["copy", "open", "comment", "delete"], page.data.url, citi.text);
+        this.addIconsToUI(el, ["copy", "open", "comment", "delete"], page.data.url, citi.text, citi.citiID);
         parent.appendChild(el);
+    }
+
+    removeCitiFromUI(url, citiID){
+        let els = document.getElementsByClassName("citi");
+        for(let el of els){
+            if(el.getAttribute("url") == url && el.getAttribute("citiID") == citiID){
+                el.remove();
+            }
+        }
+        if(els.length == 0){
+            this.removePageFromUI(url);
+        }
     }
 
     addTimestampToUI(timestamp, parent){
@@ -35,11 +63,12 @@ export class CitiUI{
         parent.appendChild(el);
     }
 
-    addIconsToUI(parent, iconNames, url, text){
+    addIconsToUI(parent, iconNames, url, text, citiID){
         let icons = document.createElement("div");
         icons.classList.add("icons");
         icons.setAttribute("url", url);
         icons.setAttribute("text", text);
+        icons.setAttribute("citiID", citiID);
         for(let type of iconNames){
             let el = document.createElement("div");
             el.classList.add("icon");
@@ -120,6 +149,21 @@ export class CitiUI{
                 }
                 navigator.clipboard.writeText(copy);
             }
+        }
+
+        els = document.getElementsByClassName("delete");
+        for(let el of els){
+            el.onclick = (function(){
+                let url = el.parentNode.getAttribute("url");
+                let citiID = el.parentNode.getAttribute("citiID");
+                if(citiID == "undefined"){
+                    this.removePageFromUI(url);
+                    this.citiList.removePage(url);
+                } else {
+                    this.removeCitiFromUI(url, citiID);
+                    this.citiList.removeCiti(url, citiID);
+                }
+            }).bind(this);
         }
     }
 }

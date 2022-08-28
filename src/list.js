@@ -2,7 +2,7 @@ import {CitiList} from "./citiList.js";
 import {CitiUI} from "./citiUI.js";
 import {Helper} from "./helper.js";
 let citiList = new CitiList();
-let citiUI = new CitiUI();
+let citiUI = new CitiUI(citiList);
 let helper = new Helper();
 console.log(citiList.PATH);
 
@@ -20,5 +20,4 @@ async function showAllCitis(){
     }
     citiUI.eventListeners();
 }
-
 
