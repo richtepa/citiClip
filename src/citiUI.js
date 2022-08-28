@@ -6,18 +6,18 @@ export class CitiUI{
         document.getElementById("list").appendChild(el);
         let citis = page.citis.reverse();
         for(let citi of citis){
-            this.addCitiToUI(citi, el);
+            this.addCitiToUI(citi, page, el);
         }
         this.addPageBoxToUI(page, el);
     }
 
 
-    addCitiToUI(citi, parent){
+    addCitiToUI(citi, page, parent){
         let el = document.createElement("div");
         el.classList.add("citi");
         this.addTimestampToUI(citi.timestamp, el);
         this.addTextToUI(citi.text, el);
-        this.addIconsToUI(el, ["copy", "open", "comment", "delete"]);
+        this.addIconsToUI(el, ["copy", "open", "comment", "delete"], page.data.url, citi.text);
         parent.appendChild(el);
     }
 
@@ -35,9 +35,11 @@ export class CitiUI{
         parent.appendChild(el);
     }
 
-    addIconsToUI(parent, iconNames){
+    addIconsToUI(parent, iconNames, url, text){
         let icons = document.createElement("div");
         icons.classList.add("icons");
+        icons.setAttribute("url", url);
+        icons.setAttribute("text", text);
         for(let type of iconNames){
             let el = document.createElement("div");
             el.classList.add("icon");
@@ -55,7 +57,7 @@ export class CitiUI{
         el.classList.add("pageBox");
         this.addFaviconToUI(page.data.favicon, el);
         this.addPageNameToUI(page.data.title, page.data.url, el);
-        this.addIconsToUI(el, ["copy", "open", "copyPage", "delete"]);
+        this.addIconsToUI(el, ["copy", "open", "copyPage", "delete"], page.data.url);
         parent.appendChild(el);
     }
 
@@ -82,6 +84,25 @@ export class CitiUI{
         el.classList.add("url");
         el.innerHTML = url;
         parent.appendChild(el);
+    }
+
+
+
+
+
+    eventListeners(){
+        let els = document.getElementsByClassName("open");
+        for(let el of els){
+            el.onclick = function(){
+                let url = el.parentNode.getAttribute("url");
+                let text = el.parentNode.getAttribute("text");
+                //if(text != "undefined"){
+                //    window.open(url + "#:~:text=" + text, "_blank").focus();
+                //} else {
+                    window.open(url, "_blank").focus();
+                //}
+            }
+        }
     }
 
 

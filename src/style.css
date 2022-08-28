@@ -10,11 +10,13 @@ body{
 .page{
     font-size: 2em;
     line-height: 2em;
+    margin: 5em 0;
 }
 
 .citi{
     display: flex;
     align-items: center;
+    margin: 1em 0;
 }
 
 .timestamp{
@@ -47,6 +49,7 @@ body{
 .pageBox{
     display: flex;
     align-items: center;
+    margin: 1em 0;
 }
 
 .favicon{
@@ -88,6 +91,7 @@ body{
 .icon{
     background-position: center;
     background-size: contain;
-    height: 2em;
-    width: 2em;
+    height: 1.5em;
+    width: 1.5em;
+    background-repeat: no-repeat;
 }
