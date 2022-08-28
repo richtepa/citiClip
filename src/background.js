@@ -13,7 +13,9 @@ chrome.contextMenus.onClicked.addListener(function(info, tab) {
     let page = {
         "url": tab.url.split("#")[0],
         "title": tab.title,
-        "favicon": tab.favIconUrl
+        "favicon": tab.favIconUrl,
+        "timestamp": new Date().valueOf(),
+        "latex": tab.title
     }
     let citi = {
         "text": info.selectionText,

@@ -99,7 +99,7 @@ export class CitiList {
         });
     }
 
-    async updateComment(url, citiID, comment){ 
+    async updateCitiParameter(url, citiID, parameter, value){ 
         const list = await this.getList();
         
         let updatedList = [...list];
@@ -107,10 +107,31 @@ export class CitiList {
             if(p.data.url == url){
                 for(let i = 0; i < p.citis.length; i++){
                     if(p.citis[i].citiID == citiID){
-                        p.citis[i].comment = comment;
+                        p.citis[i][parameter] = value;
                         break;
                     }
                 }
+                break;
+            }
+        }
+
+        return new Promise((resolve, reject) => {
+            chrome.storage.local.set({ [this.PATH]: {"citazions" : updatedList} }, () => {           
+                if (chrome.runtime.lastError){
+                    reject(chrome.runtime.lastError);
+                }
+                resolve(updatedList);
+            });
+        });
+    }
+
+    async updatePageParameter(url, parameter, value){
+        const list = await this.getList();
+        
+        let updatedList = [...list];
+        for(let p of updatedList){
+            if(p.data.url == url){
+                p.data[parameter] = value;
                 break;
             }
         }

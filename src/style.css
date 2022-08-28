@@ -3,6 +3,11 @@ body{
     font-family: sans-serif;
 }
 
+a {
+    text-decoration: none;
+    color: #000;
+}
+
 #list{
     margin: 5em;
 }
@@ -47,8 +52,10 @@ body{
     cursor: pointer;
 }
 
-.commentBox{
+.commentBox,
+.latex {
     border: 1px #aaa solid;
+    padding: 0.5em;
 }
 
 
@@ -70,10 +77,16 @@ body{
 }
 
 .url {
+    margin: 1em 0;
     line-height: 0.5em;
     font-size: 0.5em;
 }
 
+.latex {
+    margin: 1em 0;
+    line-height: 0.75em;
+    font-size: 0.75em;
+}
 
 
 
@@ -94,6 +107,9 @@ body{
 }
 .open{
     background-image: url("images/icons/open.svg");
+}
+.copyPage{
+    background-image: url("images/icons/copyPage.svg");
 }
 
 .icon{

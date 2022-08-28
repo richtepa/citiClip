@@ -77,16 +77,18 @@ export class CitiUI{
         el.onblur = (function(event){
             let url = el.parentNode.parentNode.getAttribute("url");
             let citiID = el.parentNode.parentNode.getAttribute("citiID");
-            this.citiList.updateComment(url, citiID, event.target.innerHTML);
+            this.citiList.updateCitiParameter(url, citiID, "comment", event.target.innerHTML);
         }).bind(this);
     }
 
-    addIconsToUI(parent, iconNames, url, text, citiID){
+    addIconsToUI(parent, iconNames, url, text, citiID, title, timestamp){
         let icons = document.createElement("div");
         icons.classList.add("icons");
         icons.setAttribute("url", url);
         icons.setAttribute("text", text);
         icons.setAttribute("citiID", citiID);
+        icons.setAttribute("title", title);
+        icons.setAttribute("timestamp", timestamp);
         for(let type of iconNames){
             let el = document.createElement("div");
             el.classList.add("icon");
@@ -116,8 +118,8 @@ export class CitiUI{
         let el = document.createElement("div");
         el.classList.add("pageBox");
         this.addFaviconToUI(page.data.favicon, el);
-        this.addPageNameToUI(page.data.title, page.data.url, el);
-        this.addIconsToUI(el, ["copy", "open", "copyPage", "delete"], page.data.url);
+        this.addPageNameToUI(page.data.title, page.data.url, page.data.latex, el);
+        this.addIconsToUI(el, ["copy", "open", "copyPage", "delete"], page.data.url, undefined, undefined, page.data.title, page.data.timestamp);
         parent.appendChild(el);
     }
 
@@ -131,19 +133,35 @@ export class CitiUI{
         parent.appendChild(el);
     }
 
-    addPageNameToUI(name, url, parent){
+    addPageNameToUI(name, url, latex, parent){
         let el = document.createElement("div");
         el.classList.add("pageName");
         el.innerHTML = name;
         this.addUrlToUI(url, el);
+        this.addLatexToUI(latex, el);
         parent.appendChild(el);
     }
     
     addUrlToUI(url, parent){
+        let a = document.createElement("a");
+        a.href = url;
         let el = document.createElement("div");
         el.classList.add("url");
         el.innerHTML = url;
+        a.appendChild(el);
+        parent.appendChild(a);
+    }
+
+    addLatexToUI(latex, parent){
+        let el = document.createElement("div");
+        el.contentEditable = true;
+        el.classList.add("latex");
+        el.innerHTML = latex;
         parent.appendChild(el);
+        el.onblur = (function(event){
+            let url = el.parentNode.parentNode.parentNode.getAttribute("url");
+            this.citiList.updatePageParameter(url, "latex", event.target.innerHTML);
+        }).bind(this);
     }
 
 
@@ -204,6 +222,30 @@ export class CitiUI{
                     this.citiList.removeCiti(url, citiID);
                 }
             }).bind(this);
+        }
+
+        els = document.getElementsByClassName("copyPage");
+        for(let el of els){
+            el.onclick = function(){
+
+                let latex = el.parentElement.parentElement.childNodes[1].childNodes[2].innerHTML.replace(" ", "_");
+                let url = el.parentElement.getAttribute("url");
+                let title = el.parentElement.getAttribute("title");
+                let lastchecked = new Date(parseInt(el.parentElement.getAttribute("timestamp"))).toLocaleDateString();
+
+
+                let copy = ""
+                copy += `@misc{${latex},\r\n`;
+                copy += `title = {${title}},\r\n`;
+                copy += `url = {${url}},\r\n`;
+                copy += `lastchecked = {${lastchecked}},\r\n`;
+                //copy += `author = {${author}},\r\n`;
+                //copy += `editor = {${editor}},\r\n`;
+                //copy += `originalyear = {${originalyear}},\r\n`;
+                copy += `}`;
+
+                navigator.clipboard.writeText(copy);
+            }
         }
     }
 }
