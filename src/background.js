@@ -17,7 +17,7 @@ chrome.contextMenus.onClicked.addListener(function(info, tab) {
     }
     let citi = {
         "text": info.selectionText,
-        "notes": "notesBuffer",
+        "comment": "",
         "tags": [],
         "timestamp": new Date().valueOf()
     };

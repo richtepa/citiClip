@@ -32,7 +32,7 @@ export class CitiUI{
         el.setAttribute("url", page.data.url);
         el.setAttribute("citiID", citi.citiID);
         this.addTimestampToUI(citi.timestamp, el);
-        this.addTextToUI(citi.text, el);
+        this.addTextToUI(citi.text, citi.comment, el);
         this.addIconsToUI(el, ["copy", "open", "comment", "delete"], page.data.url, citi.text, citi.citiID);
         parent.appendChild(el);
     }
@@ -56,11 +56,29 @@ export class CitiUI{
         parent.appendChild(el);
     }
 
-    addTextToUI(text, parent){
+    addTextToUI(text, comment, parent){
         let el = document.createElement("div");
         el.innerHTML = text;
         el.classList.add("text");
         parent.appendChild(el);
+        this.addCommentToUI(comment, el);
+    }
+
+    addCommentToUI(comment, parent){
+        let el = document.createElement("div");
+        el.classList.add("commentBox");
+        parent.appendChild(el);
+        el.contentEditable = true;
+        if(comment != ""){
+            el.innerHTML = comment;
+        } else {
+            el.classList.add("hidden");
+        }
+        el.onblur = (function(event){
+            let url = el.parentNode.parentNode.getAttribute("url");
+            let citiID = el.parentNode.parentNode.getAttribute("citiID");
+            this.citiList.updateComment(url, citiID, event.target.innerHTML);
+        }).bind(this);
     }
 
     addIconsToUI(parent, iconNames, url, text, citiID){
@@ -76,6 +94,19 @@ export class CitiUI{
             icons.appendChild(el);
         }
         parent.appendChild(icons);
+    }
+
+    toggleHiddenComment(url, citiID){   
+        let els = document.getElementsByClassName("citi");
+        for(let el of els){
+            if(el.getAttribute("url") == url && el.getAttribute("citiID") == citiID){
+                let node = el.childNodes[1].childNodes[1];
+                node.classList.toggle("hidden");
+                if(!node.classList.contains("hidden")){
+                    node.focus();
+                }
+            }
+        }
     }
 
 
@@ -149,6 +180,15 @@ export class CitiUI{
                 }
                 navigator.clipboard.writeText(copy);
             }
+        }
+
+        els = document.getElementsByClassName("comment");
+        for(let el of els){
+            el.onclick = (function(){
+                let url = el.parentNode.getAttribute("url");
+                let citiID = el.parentNode.getAttribute("citiID");
+                this.toggleHiddenComment(url, citiID);
+            }).bind(this);
         }
 
         els = document.getElementsByClassName("delete");

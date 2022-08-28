@@ -4,7 +4,6 @@ import {Helper} from "./helper.js";
 let citiList = new CitiList();
 let citiUI = new CitiUI(citiList);
 let helper = new Helper();
-console.log(citiList.PATH);
 
 
 document.getElementById("button").onclick = function(){

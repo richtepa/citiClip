@@ -98,4 +98,30 @@ export class CitiList {
             });
         });
     }
+
+    async updateComment(url, citiID, comment){ 
+        const list = await this.getList();
+        
+        let updatedList = [...list];
+        for(let p of updatedList){
+            if(p.data.url == url){
+                for(let i = 0; i < p.citis.length; i++){
+                    if(p.citis[i].citiID == citiID){
+                        p.citis[i].comment = comment;
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+
+        return new Promise((resolve, reject) => {
+            chrome.storage.local.set({ [this.PATH]: {"citazions" : updatedList} }, () => {           
+                if (chrome.runtime.lastError){
+                    reject(chrome.runtime.lastError);
+                }
+                resolve(updatedList);
+            });
+        });
+    }
 }
