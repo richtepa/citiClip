@@ -7,15 +7,13 @@ let helper = new Helper();
 
 
 document.getElementById("page").onclick = function(){
-    chrome.tabs.create({
-            url: "list.html",
-            selected: true
-    });
+    openListInNewTab();
 }
-document.getElementById("page").onclick = function(){
+/*
+document.getElementById("new").onclick = function(){
     addMenu();
 }
-
+*/
 
 window.onload = function(){
     showAllLocalCitis();
@@ -33,13 +31,39 @@ async function showAllLocalCitis(){
         }
     }
     if(!pageFound){
-        addMenu();
+        openListInNewTab();
     }
 }
 
-function addMenu(){
-    console.log("addMenu");
+function openListInNewTab(){
+    chrome.tabs.create({
+            url: "list.html",
+            selected: true
+    });
 }
+
+
+
+
+
+/*
+async function addMenu(){
+    let tab = await helper.getTab();
+    document.getElementById("new").classList.remove("hidden");
+    debugger;
+    document.getElementById("url").innerHTML = tab.url;
+    document.getElementById("title").innerHTML = tab.title;
+}
+
+function save(){
+    // save
+    closeAddMenu();
+}
+
+function closeAddMenu(){
+    document.getElementById("new").classList.add("hidden");
+}
+*/
 
 /*
 async function addCiti(){
