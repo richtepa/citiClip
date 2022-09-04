@@ -1,0 +1,26 @@
+#list,
+.page,
+.text {
+    margin: 0;
+}
+
+.page {
+    padding: 1em;
+}
+
+.text{
+    width: max-content;
+    max-width: 20em;
+}
+
+#commandbar{
+    display: flex;
+    align-items: center;
+}
+
+#page,
+#new{
+    margin: 0 auto;
+    padding: 2em;
+    cursor: pointer;
+}

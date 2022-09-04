@@ -6,21 +6,42 @@ let citiUI = new CitiUI(citiList);
 let helper = new Helper();
 
 
-document.getElementById("button").onclick = function(){
-    addCiti();
-}
 document.getElementById("page").onclick = function(){
     chrome.tabs.create({
             url: "list.html",
             selected: true
     });
 }
-
-window.onload = function(){
-    showAllCitis();
+document.getElementById("page").onclick = function(){
+    addMenu();
 }
 
 
+window.onload = function(){
+    showAllLocalCitis();
+}
+
+async function showAllLocalCitis(){
+    let pages = await citiList.getList();
+    let url = await helper.getURL();
+    let pageFound = false;
+    for(let page of pages){
+        if(page.data.url == url){
+            citiUI.addSmallPageToUI(page);
+            pageFound = true;
+            break;
+        }
+    }
+    if(!pageFound){
+        addMenu();
+    }
+}
+
+function addMenu(){
+    console.log("addMenu");
+}
+
+/*
 async function addCiti(){
     let url = await helper.getURL();
     let page = {
@@ -36,12 +57,4 @@ async function addCiti(){
     citiList.addCiti(page, citi);
     citiUI.addCitiToUI(page, citi);
 }
-
-async function showAllCitis(){
-    let list = await citiList.getList();
-    for(let page of list){
-        citiUI.addPageToUI(page);
-    }
-}
-
-
+*/

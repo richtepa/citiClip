@@ -17,6 +17,17 @@ export class CitiUI{
         this.addPageBoxToUI(page, el);
     }
 
+    addSmallPageToUI(page){
+        let el = document.createElement("div");
+        el.classList.add("page");
+        el.setAttribute("url", page.data.url);
+        document.getElementById("list").appendChild(el);
+        let citis = page.citis.reverse();
+        for(let citi of citis){
+            this.addSmallCitiToUI(citi, page, el);
+        }
+    }
+
     removePageFromUI(url){
         let els = document.getElementsByClassName("page");
         for(let el of els){
@@ -34,6 +45,15 @@ export class CitiUI{
         this.addTimestampToUI(citi.timestamp, el);
         this.addTextToUI(citi.text, citi.comment, el);
         this.addIconsToUI(el, ["comment", "copy", "open", "delete"], page.data.url, citi.text, citi.citiID);
+        parent.appendChild(el);
+    }
+
+    addSmallCitiToUI(citi, page, parent){
+        let el = document.createElement("div");
+        el.classList.add("citi");
+        el.setAttribute("url", page.data.url);
+        el.setAttribute("citiID", citi.citiID);
+        this.addTextToUI(citi.text, citi.comment, el);
         parent.appendChild(el);
     }
 
