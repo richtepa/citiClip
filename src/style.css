@@ -112,6 +112,13 @@ a {
     background-image: url("images/icons/copyPage.svg");
 }
 
+.copy.done{
+    background-image: url("images/icons/copyDone.svg");
+}
+.copyPage.done{
+    background-image: url("images/icons/copyPageDone.svg");
+}
+
 .icon{
     background-position: center;
     background-size: contain;

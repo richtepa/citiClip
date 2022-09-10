@@ -1,5 +1,7 @@
-import {CitiList} from "./citiList.js";
-let citiList = new CitiList();
+//import {CitiList} from "./citiList.js";
+//let citiList = new CitiList();
+import {Helper} from "./helper.js";
+let helper = new Helper();
 
 chrome.runtime.onInstalled.addListener(function() {
     chrome.contextMenus.create({
@@ -11,7 +13,7 @@ chrome.runtime.onInstalled.addListener(function() {
     
 chrome.contextMenus.onClicked.addListener(function(info, tab) {
     let page = {
-        "url": tab.url.split("#")[0],
+        "url": tab.url.split("#")[0].split("?")[0],
         "title": tab.title,
         "favicon": tab.favIconUrl,
         "timestamp": new Date().valueOf(),
@@ -23,5 +25,5 @@ chrome.contextMenus.onClicked.addListener(function(info, tab) {
         "tags": [],
         "timestamp": new Date().valueOf()
     };
-    citiList.addCiti(page, citi);
+    let res = helper.addCiti(page, citi);
 })
