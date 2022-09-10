@@ -1,11 +1,30 @@
+:root{
+    --bg-color: white;
+    --text-color: black;
+}
+
+@media screen and (prefers-color-scheme: dark) {
+    :root{
+        --bg-color: rgb(32, 32, 32);;
+        --text-color: white;
+    }
+    .icon{
+        filter: invert(1);
+    }
+}
+
+
+
 body{
     margin: 0px;
     font-family: sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
 }
 
 a {
     text-decoration: none;
-    color: #000;
+    color: var(--text-color);
 }
 
 #list{
