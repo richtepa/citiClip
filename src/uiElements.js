@@ -4,25 +4,38 @@ export class UI{
         this.pages = [];
 
         for(let page of pages){
-            this.pages.push(new uiPage(this.el, page.data, page.citis));
+            this.pages.push(new uiPage(this.el, this.pages.length, this, page.data, page.citis));
         }
+    }
+
+    insertPage(page, index){
+        this.pages = this.pages.splice(index, 0, new uiPage(this.el, 0, this, page.data, page.citis)).join();
+    }
+
+    removePage(page){
+        page.destroy();
+        this.pages.splice(this.pages.indexOf(page), 1);
     }
 }
 
 export class uiPage{
-    constructor(parentElement, pageData, pageCitis){
+    constructor(parentElement, elementIndex, parent, pageData, pageCitis){
         this.pageData = pageData;
         this.pageCitis = pageCitis;
-        this.parentElement = parentElement;
+        this.parent = parent;
 
         this.el = document.createElement("div");
         this.el.classList.add("page");
-        this.parentElement.appendChild(this.el);
+        if(parentElement.hasChildNodes()){
+            parentElement.insertBefore(this.el, parentElement.childNodes[elementIndex]);
+        } else {
+            parentElement.appendChild(this.el);
+        }
 
-        let citis = this.pageCitis.reverse();
+        let citis = this.pageCitis;
         this.citations = [];
         for(let citi of citis){
-            this.citations.push(new uiCitation(this.el, this, this.pageData, citi));
+            this.citations.push(new uiCitation(this.el, 0, this, this.pageData, citi));
         }
 
         this.elHr = document.createElement("hr");
@@ -32,50 +45,77 @@ export class uiPage{
         this.elPageBox.classList.add("pageBox");
         this.el.appendChild(this.elPageBox);
 
-        this.elFavicon = new uiFavicon(this.elPageBox, this, this.pageData);
-        this.elPageName = new uiPageName(this.elPageBox, this, this.pageData);
+        this.elFavicon = new uiFavicon(this.elPageBox, 0, this, this.pageData);
+        this.elPageName = new uiPageName(this.elPageBox, 1, this, this.pageData);
 
         this.elIcons = document.createElement("div");
         this.elIcons.classList.add("icons");
         this.elPageBox.appendChild(this.elIcons);
         this.icons = [];
         for(let type of ["copyPage", "copy", "open", "delete"]){
-            this.icons.push(new uiIcon(this.elIcons, this, this.pageData, undefined, type));
+            this.icons.push(new uiIcon(this.elIcons, this.icons.length, this, this.pageData, undefined, type));
         }
 
     }
 
-    updatePageParameter(){
-        // ToDo
+    destroy(){
+        this.el.parentNode.removeChild(this.el);
     }
 
     remove(){
-        // ToDO
+        this.parent.removePage(this);
+    }
+
+
+    insertCitation(citation, index){
+        this.citations = this.citations.splice(index, 0, new uiCitation(this.el, 0, this, this.pageData, citation)).join();
+    }
+
+    removeCitation(citation){
+        citation.destroy();
+        this.citations.splice(this.citations.indexOf(citation), 1);
+    }
+
+
+    updatePageParameter(){
+        // ToDo
     }
 }
 
 
 
 export class uiCitation{
-    constructor(parentElement, parent, pageData, citationData){
+    constructor(parentElement, elementIndex, parent, pageData, citationData){
         this.citationData = citationData;
         this.parent = parent;
         this.pageData = pageData;
 
         this.el = document.createElement("div");
         this.el.classList.add("citi");
-        parentElement.appendChild(this.el);
+        if(parentElement.hasChildNodes()){
+            parentElement.insertBefore(this.el, parentElement.childNodes[elementIndex]);
+        } else {
+            parentElement.appendChild(this.el)
+        }
 
-        this.elTimestamp = new uiTimestamp(this.el, this, this.citationData);
-        this.elText = new uiText(this.el, this, this.citationData);
+        this.elTimestamp = new uiTimestamp(this.el, 0, this, this.citationData);
+        this.elText = new uiText(this.el, 1, this, this.citationData);
 
         this.elIcons = document.createElement("div");
         this.elIcons.classList.add("icons");
         this.el.appendChild(this.elIcons);
         this.icons = [];
         for(let type of ["comment", "copy", "open", "delete"]){
-            this.icons.push(new uiIcon(this.elIcons, this, this.pageData, this.citationData, type));
+            this.icons.push(new uiIcon(this.elIcons, this.icons.length, this, this.pageData, this.citationData, type));
         }
+    }
+
+    destroy(){
+        this.el.parentNode.removeChild(this.el);
+    }
+
+    remove(){
+        this.parent.removeCitation(this);
     }
 }
 
@@ -85,7 +125,7 @@ export class uiCitation{
 
 
 export class uiFavicon{
-    constructor(parentElement, parent, pageData){
+    constructor(parentElement, elementIndex, parent, pageData){
         this.parent = parent;
         this.pageData = pageData;
 
@@ -95,19 +135,31 @@ export class uiFavicon{
             this.pageData.favicon = "images/icons/favicon.svg";
         }
         this.el.style.backgroundImage = "url(" + this.pageData.favicon + ")";
-        parentElement.appendChild(this.el);
+        if(parentElement.hasChildNodes()){
+            parentElement.insertBefore(this.el, parentElement.childNodes[elementIndex]);
+        } else {
+            parentElement.appendChild(this.el)
+        }
+    }
+
+    destroy(){
+        this.el.parentNode.removeChild(this.el);
     }
 }
 
 export class uiPageName{
-    constructor(parentElement, parent, pageData){
+    constructor(parentElement, elementIndex, parent, pageData){
         this.parent = parent;
         this.pageData = pageData;
 
         this.el = document.createElement("div");
         this.el.classList.add("pageName");
         this.el.innerHTML = pageData.title;
-        parentElement.appendChild(this.el);
+        if(parentElement.hasChildNodes()){
+            parentElement.insertBefore(this.el, parentElement.childNodes[elementIndex]);
+        } else {
+            parentElement.appendChild(this.el)
+        }
 
         this.elLink = document.createElement("a");
         this.elLink.href = pageData.url;
@@ -126,32 +178,51 @@ export class uiPageName{
             let url = this.pageData.url;
             this.parent.updatePageParameter(url, "latex", event.target.innerHTML);
         }).bind(this);
+    }
 
+    destroy(){
+        this.el.parentNode.removeChild(this.el);
     }
 }
 
 export class uiTimestamp{
-    constructor(parentElement, parent, citiData){
+    constructor(parentElement, elementIndex, parent, citiData){
         this.parent = parent;
         this.citiData = citiData;
 
         this.el = document.createElement("div");
         this.el.classList.add("timestamp");
         this.el.innerHTML = new Date(this.citiData.timestamp).toLocaleString();
-        parentElement.appendChild(this.el);
+        if(parentElement.hasChildNodes()){
+            parentElement.insertBefore(this.el, parentElement.childNodes[elementIndex]);
+        } else {
+            parentElement.appendChild(this.el)
+        }
+    }
+
+    destroy(){
+        this.el.parentNode.removeChild(this.el);
     }
 }
 
 export class uiText{
-    constructor(parentElement, parent, citiData){
+    constructor(parentElement, elementIndex, parent, citiData){
         this.parent = parent;
         this.citiData = citiData;
 
         this.el = document.createElement("div");
         this.el.innerHTML = this.citiData.text;
         this.el.classList.add("text");
-        parentElement.appendChild(this.el);
+        if(parentElement.hasChildNodes()){
+            parentElement.insertBefore(this.el, parentElement.childNodes[elementIndex]);
+        } else {
+            parentElement.appendChild(this.el)
+        }
         // ToDo this.addCommentToUI(comment, el);
+    }
+
+    destroy(){
+        this.el.parentNode.removeChild(this.el);
     }
 }
 
@@ -159,7 +230,7 @@ export class uiText{
 
 
 export class uiIcon{
-    constructor(parentElement, parent, pageData, citationData, type){
+    constructor(parentElement, elementIndex, parent, pageData, citationData, type){
         // ToDo: correct for citations not only page
 
         this.parent = parent;
@@ -171,7 +242,11 @@ export class uiIcon{
         this.el = document.createElement("div");
         this.el.classList.add("icon");
         this.el.classList.add(type);
-        parentElement.appendChild(this.el);
+        if(parentElement.hasChildNodes()){
+            parentElement.insertBefore(this.el, parentElement.childNodes[elementIndex]);
+        } else {
+            parentElement.appendChild(this.el)
+        }
 
         this.el.addEventListener("click", (function(event){
             let url = this.pageData.url;
@@ -233,5 +308,9 @@ export class uiIcon{
                     break;
             }
         }).bind(this));
+    }
+
+    destroy(){
+        this.el.parentNode.removeChild(this.el);
     }
 }

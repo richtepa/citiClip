@@ -6,6 +6,7 @@ let citiList = new CitiList();
 let citiUI = new CitiUI(citiList);
 let helper = new Helper();
 
+let ui;
 
 window.onload = function(){
     showAllCitis();
@@ -16,7 +17,7 @@ async function showAllCitis(){
     let list = await citiList.getList();
     let pages = list.reverse();
 
-    let el = new UI(document.getElementById("list"), pages);
+    ui = new UI(document.getElementById("list"), pages);
     
     /*
     for(let page of pages){
