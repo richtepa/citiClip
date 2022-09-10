@@ -1,84 +1,35 @@
-import {CitiList} from "./citiList.js";
-import {CitiUI} from "./citiUI.js";
 import {Helper} from "./helper.js";
-let citiList = new CitiList();
-let citiUI = new CitiUI(citiList);
+import {UI} from "./uiElements.js";
 let helper = new Helper();
 
-
-document.getElementById("page").onclick = function(){
-    openListInNewTab();
-}
-/*
-document.getElementById("new").onclick = function(){
-    addMenu();
-}
-*/
+let ui;
 
 window.onload = function(){
-    showAllLocalCitis();
+    showAllCitis();
+    document.getElementById("page").onclick = function(){
+        helper.openInNewTab("list.html", true);
+    }
 }
 
-async function showAllLocalCitis(){
-    let pages = await citiList.getList();
+
+async function showAllCitis(){
+    let pages = await helper.loadData();
     let url = await helper.getURL();
-    let pageFound = false;
+
+    let isSamePage = false;
     for(let page of pages){
         if(page.data.url == url){
-            citiUI.addSmallPageToUI(page);
-            pageFound = true;
-            break;
+            isSamePage = true;
         }
     }
-    if(!pageFound){
-        openListInNewTab();
+
+    if(!isSamePage){
+        helper.openInNewTab("list.html", true);
+        return;
     }
+    ui = new UI(document.getElementById("list"), pages, save, url);
 }
 
-function openListInNewTab(){
-    chrome.tabs.create({
-            url: "list.html",
-            selected: true
-    });
+async function save(data){
+    helper.saveData(data);
 }
-
-
-
-
-
-/*
-async function addMenu(){
-    let tab = await helper.getTab();
-    document.getElementById("new").classList.remove("hidden");
-    debugger;
-    document.getElementById("url").innerHTML = tab.url;
-    document.getElementById("title").innerHTML = tab.title;
-}
-
-function save(){
-    // save
-    closeAddMenu();
-}
-
-function closeAddMenu(){
-    document.getElementById("new").classList.add("hidden");
-}
-*/
-
-/*
-async function addCiti(){
-    let url = await helper.getURL();
-    let page = {
-        "url": url
-    };
-    let citi = {
-        "text": "text",
-        "notes": "notesBuffer",
-        "url": url,
-        "tags": [],
-        "timestamp": new Date().valueOf()
-    }
-    citiList.addCiti(page, citi);
-    citiUI.addCitiToUI(page, citi);
-}
-*/

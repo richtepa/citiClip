@@ -1,11 +1,13 @@
 export class UI{
-    constructor(parent, pages, saveCallback){
+    constructor(parent, pages, saveCallback, url = undefined){
         this.el = parent;
         this.saveCallback = saveCallback;
         this.pages = [];
 
         for(let page of pages){
-            this.pages.push(new uiPage(this.el, 0, this, page.data, page.citis));
+            if(url == undefined || page.data.url == url){
+                this.pages.push(new uiPage(this.el, 0, this, page.data, page.citis));
+            }
         }
     }
 

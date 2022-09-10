@@ -13,7 +13,7 @@ chrome.runtime.onInstalled.addListener(function() {
     
 chrome.contextMenus.onClicked.addListener(function(info, tab) {
     let page = {
-        "url": tab.url.split("#")[0],
+        "url": tab.url.split("#")[0].split("?")[0],
         "title": tab.title,
         "favicon": tab.favIconUrl,
         "timestamp": new Date().valueOf(),

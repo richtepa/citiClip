@@ -1,9 +1,5 @@
-//import {CitiList} from "./citiList.js";
-//import {CitiUI} from "./citiUI.js";
 import {Helper} from "./helper.js";
 import {UI} from "./uiElements.js";
-//let citiList = new CitiList();
-//let citiUI = new CitiUI(citiList);
 let helper = new Helper();
 
 let ui;

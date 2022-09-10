@@ -13,10 +13,22 @@ export class Helper{
             });
         });
     }
+
+    async openInNewTab(url, selected){
+        chrome.tabs.create({
+                url: url,
+                selected: selected
+        });
+    }
     
-    async getURL(){
+    async getURL(long = false){
         let tab = await this.getTab();
-        return tab.url;
+        console.log(tab);
+        if(long){
+            return tab.url;
+        } else {
+            return tab.url.split("#")[0].split("?")[0];
+        }
     }
 
     async loadData(){

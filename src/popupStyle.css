@@ -18,9 +18,15 @@
     align-items: center;
 }
 
-#page,
-#new{
+#page{
     margin: 0 auto;
     padding: 2em;
     cursor: pointer;
+}
+
+hr,
+.pageBox,
+.timestamp,
+.icons{
+    display: none;
 }
