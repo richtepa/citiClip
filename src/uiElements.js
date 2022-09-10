@@ -25,6 +25,9 @@ export class uiPage{
             this.citations.push(new uiCitation(this.el, this, this.pageData, citi));
         }
 
+        this.elHr = document.createElement("hr");
+        this.el.appendChild(this.elHr);
+
         this.elPageBox = document.createElement("div");
         this.elPageBox.classList.add("pageBox");
         this.el.appendChild(this.elPageBox);
@@ -121,7 +124,7 @@ export class uiPageName{
         this.el.appendChild(this.elLatex);
         this.elLatex.onblur = (function(event){
             let url = this.pageData.url;
-            this.parent.citiList.updatePageParameter(url, "latex", event.target.innerHTML);
+            this.parent.updatePageParameter(url, "latex", event.target.innerHTML);
         }).bind(this);
 
     }
@@ -194,6 +197,11 @@ export class uiIcon{
                     copyLatex += `}`;
 
                     navigator.clipboard.writeText(copyLatex);
+
+                    this.el.classList.add("done");
+                    window.setTimeout((function(){
+                        this.el.classList.remove("done");
+                    }).bind(this), 2500);
                     break;
                 case "copy":
                     let copy;
@@ -204,6 +212,11 @@ export class uiIcon{
                     }
 
                     navigator.clipboard.writeText(copy);
+
+                    this.el.classList.add("done");
+                    window.setTimeout((function(){
+                        this.el.classList.remove("done");
+                    }).bind(this), 2500);
                     break;
                 case "open":
                     //if(text != "undefined"){
