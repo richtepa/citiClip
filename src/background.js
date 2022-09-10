@@ -25,5 +25,5 @@ chrome.contextMenus.onClicked.addListener(function(info, tab) {
         "tags": [],
         "timestamp": new Date().valueOf()
     };
-    helper.addCiti(page, citi);
+    let res = helper.addCiti(page, citi);
 })

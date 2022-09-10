@@ -17,7 +17,7 @@ async function showAllCitis(){
     //let list = await citiList.getList();
     let pages = await helper.loadData();
 
-    ui = new UI(document.getElementById("list"), pages, helper.saveData);
+    ui = new UI(document.getElementById("list"), pages, save);
     
     /*
     for(let page of pages){
@@ -27,4 +27,7 @@ async function showAllCitis(){
     */
 }
 
+async function save(data){
+    helper.saveData(data);
+}
 

@@ -11,7 +11,6 @@ export class UI{
 
     insertPage(page, index){
         this.pages = this.pages.splice(index, 0, new uiPage(this.el, 0, this, page.data, page.citis)).join();
-        //this.save();
     }
 
     removePage(page){
@@ -28,7 +27,6 @@ export class UI{
                 pages[pages.length - 1].citis.push(citi.citationData);
             }
         }
-        console.log("save", pages);
         this.saveCallback(pages);
     }
 }

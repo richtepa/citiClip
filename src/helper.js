@@ -25,22 +25,24 @@ export class Helper{
                 if (chrome.runtime.lastError){
                     reject(chrome.runtime.lastError);
                 }
-                console.log(result);
                 if(result[this.PATH]?.citazions == undefined){
                     resolve([]);
                     return;
                 }
+                console.log(result[this.PATH].citazions);
                 resolve(result[this.PATH].citazions);
             });
         });
     }
     
     async saveData(data){
-        chrome.storage[this.sync ? "sync": "local"].set({ [this.PATH]: {"citazions" : data} }, () => {           
-            if (chrome.runtime.lastError){
-                reject(chrome.runtime.lastError);
-            }
-            resolve(updatedList);
+        return new Promise((resolve, reject) => {
+            chrome.storage[this.sync ? "sync": "local"].set({ [this.PATH]: {"citazions" : data} }, () => {           
+                if (chrome.runtime.lastError){
+                    reject(chrome.runtime.lastError);
+                }
+                resolve(data);
+            });
         });
     }
 
