@@ -1,9 +1,9 @@
-import {CitiList} from "./citiList.js";
-import {CitiUI} from "./citiUI.js";
+//import {CitiList} from "./citiList.js";
+//import {CitiUI} from "./citiUI.js";
 import {Helper} from "./helper.js";
 import {UI} from "./uiElements.js";
-let citiList = new CitiList();
-let citiUI = new CitiUI(citiList);
+//let citiList = new CitiList();
+//let citiUI = new CitiUI(citiList);
 let helper = new Helper();
 
 let ui;
@@ -14,10 +14,10 @@ window.onload = function(){
 
 
 async function showAllCitis(){
-    let list = await citiList.getList();
-    let pages = list.reverse();
+    //let list = await citiList.getList();
+    let pages = await helper.loadData();
 
-    ui = new UI(document.getElementById("list"), pages);
+    ui = new UI(document.getElementById("list"), pages, helper.saveData);
     
     /*
     for(let page of pages){
@@ -26,4 +26,5 @@ async function showAllCitis(){
     citiUI.eventListeners();
     */
 }
+
 

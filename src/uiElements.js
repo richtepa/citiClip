@@ -1,20 +1,35 @@
 export class UI{
-    constructor(parent, pages){
+    constructor(parent, pages, saveCallback){
         this.el = parent;
+        this.saveCallback = saveCallback;
         this.pages = [];
 
         for(let page of pages){
-            this.pages.push(new uiPage(this.el, this.pages.length, this, page.data, page.citis));
+            this.pages.push(new uiPage(this.el, 0, this, page.data, page.citis));
         }
     }
 
     insertPage(page, index){
         this.pages = this.pages.splice(index, 0, new uiPage(this.el, 0, this, page.data, page.citis)).join();
+        //this.save();
     }
 
     removePage(page){
         page.destroy();
         this.pages.splice(this.pages.indexOf(page), 1);
+        this.save();
+    }
+
+    save(){;
+        let pages = [];
+        for(let page of this.pages){
+            pages.push({"citis": [], "data": page.pageData});
+            for(let citi of page.citations){
+                pages[pages.length - 1].citis.push(citi.citationData);
+            }
+        }
+        console.log("save", pages);
+        this.saveCallback(pages);
     }
 }
 
@@ -69,16 +84,19 @@ export class uiPage{
 
     insertCitation(citation, index){
         this.citations = this.citations.splice(index, 0, new uiCitation(this.el, 0, this, this.pageData, citation)).join();
+        //this.parent.save();
     }
 
     removeCitation(citation){
         citation.destroy();
         this.citations.splice(this.citations.indexOf(citation), 1);
+        this.parent.save();
     }
 
 
-    updatePageParameter(){
-        // ToDo
+    updatePageParameter(page, parameter, value){
+        page.pageData[parameter] = value;
+        this.parent.save();
     }
 }
 
@@ -98,8 +116,21 @@ export class uiCitation{
             parentElement.appendChild(this.el)
         }
 
-        this.elTimestamp = new uiTimestamp(this.el, 0, this, this.citationData);
-        this.elText = new uiText(this.el, 1, this, this.citationData);
+        this.timestamp = new uiTimestamp(this.el, 0, this, this.citationData);
+        this.text = new uiText(this.el, 1, this, this.citationData);
+        
+        this.elComment = document.createElement("div");
+        this.elComment.classList.add("commentBox");
+        this.text.el.appendChild(this.elComment);
+        this.elComment.contentEditable = true;
+        if(citationData.comment != ""){
+            this.elComment.innerHTML = citationData.comment;
+        } else {
+            this.elComment.classList.add("hidden");
+        }
+        this.elComment.onblur = (function(event){
+            this.updateCitiParameter(this, "comment", event.target.innerHTML);
+        }).bind(this);
 
         this.elIcons = document.createElement("div");
         this.elIcons.classList.add("icons");
@@ -116,6 +147,12 @@ export class uiCitation{
 
     remove(){
         this.parent.removeCitation(this);
+    }
+
+    updateCitiParameter(citi, parameter, value){
+        // ToDo
+        citi.citationData[parameter] = value;
+        this.parent.parent.save();
     }
 }
 
@@ -176,7 +213,7 @@ export class uiPageName{
         this.el.appendChild(this.elLatex);
         this.elLatex.onblur = (function(event){
             let url = this.pageData.url;
-            this.parent.updatePageParameter(url, "latex", event.target.innerHTML);
+            this.parent.updatePageParameter(this, "latex", event.target.innerHTML);
         }).bind(this);
     }
 
@@ -218,7 +255,6 @@ export class uiText{
         } else {
             parentElement.appendChild(this.el)
         }
-        // ToDo this.addCommentToUI(comment, el);
     }
 
     destroy(){
@@ -231,8 +267,6 @@ export class uiText{
 
 export class uiIcon{
     constructor(parentElement, elementIndex, parent, pageData, citationData, type){
-        // ToDo: correct for citations not only page
-
         this.parent = parent;
         this.pageData = pageData;
         this.type = type;
@@ -304,7 +338,10 @@ export class uiIcon{
                     this.parent.remove();
                     break;
                 case "comment":
-                    // ToDo
+                    this.parent.elComment.classList.toggle("hidden");
+                    if(!this.parent.elComment.classList.contains("hidden")){
+                        this.parent.elComment.focus();
+                    }
                     break;
             }
         }).bind(this));
