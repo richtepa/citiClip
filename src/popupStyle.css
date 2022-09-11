@@ -10,7 +10,8 @@
 
 .text{
     width: max-content;
-    max-width: 20em;
+    max-width: 30em;
+    min-width: 15em;
 }
 
 #commandbar{

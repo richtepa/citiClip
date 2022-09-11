@@ -35,7 +35,7 @@ a {
     font-size: 2em;
     line-height: 2em;
     margin: 5em 0;
-    padding: 2em;
+    padding: 1em 2em;
     box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 }
 
@@ -130,6 +130,9 @@ a {
 .copyPage{
     background-image: url("images/icons/copyPage.svg");
 }
+.action{
+    background-image: url("images/icons/edit.svg");
+}
 
 .copy.done{
     background-image: url("images/icons/copyDone.svg");
@@ -146,10 +149,13 @@ a {
     background-repeat: no-repeat;
 }
 
-.hidden{
+.hidden,
+.icon,
+.icons:hover .icon.action{
     display: none;
 }
 
-.copy{
-    margin-left: 2em;
+.icon.action,
+.icons:hover .icon{
+    display: block;
 }

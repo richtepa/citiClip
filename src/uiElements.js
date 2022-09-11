@@ -67,7 +67,7 @@ export class uiPage{
         this.elIcons.classList.add("icons");
         this.elPageBox.appendChild(this.elIcons);
         this.icons = [];
-        for(let type of ["copyPage", "copy", "open", "delete"]){
+        for(let type of ["copyPage", "copy", "open", "delete", "action"]){
             this.icons.push(new uiIcon(this.elIcons, this.icons.length, this, this.pageData, undefined, type));
         }
 
@@ -136,7 +136,7 @@ export class uiCitation{
         this.elIcons.classList.add("icons");
         this.el.appendChild(this.elIcons);
         this.icons = [];
-        for(let type of ["comment", "copy", "open", "delete"]){
+        for(let type of ["comment", "copy", "open", "delete", "action"]){
             this.icons.push(new uiIcon(this.elIcons, this.icons.length, this, this.pageData, this.citationData, type));
         }
     }
