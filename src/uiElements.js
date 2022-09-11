@@ -21,7 +21,7 @@ export class UI{
         this.save();
     }
 
-    save(){;
+    save(){
         let pages = [];
         for(let page of this.pages){
             pages.push({"citis": [], "data": page.pageData});
