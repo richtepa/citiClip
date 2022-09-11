@@ -10,6 +10,10 @@ async function load(){
     let settings = await helper.loadSettings();
     let pages = await helper.loadData();
     let ui = new UI(document.getElementById("list"), pages, save, undefined, helper, settings);
+
+    chrome.storage.onChanged.addListener(function(changes, namespace) {
+        ui.update(changes);
+    });
 }
 
 async function save(data){

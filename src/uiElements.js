@@ -1,6 +1,7 @@
 export class UI{
 
     darkModeOptions = ["auto", "dark", "light"];
+    alreadyUpdated = false;
 
     constructor(parent, pages, saveCallback, url = undefined, helper, settings){
         this.helper = helper;
@@ -23,6 +24,103 @@ export class UI{
             }
         }
     }
+
+    update(changes){
+        if(this.helper.sitedataPath in changes){
+            this.updateData(changes[this.helper.sitedataPath]);
+        }
+        /*
+        if(this.helper.settingsPath in changes){
+            this.updateSettings(changes[this.helper.settingsPath]);
+        }
+        */
+    }
+
+    updateData(changes){
+        if(this.alreadyUpdated){
+            this.alreadyUpdated = false;
+            return;
+        }
+        console.log("data", changes);
+
+        
+        // remove old pages
+        for(let i = 0; i < changes.oldValue.length; i++){
+            let stillExists = false;
+            for(let j = 0; j < changes.newValue.length; j++){
+                if(changes.oldValue[i].data.url == changes.newValue[j].data.url){
+                    stillExists = true;
+                }
+            }
+            if(!stillExists){
+                this.removePage(this.pages[i]);
+                changes.oldValue.splice(i, 1);
+            }
+        }
+        // add new pages
+        for(let i = 0; i < changes.newValue.length; i++){
+            if(changes.oldValue[i] == undefined || changes.oldValue[i].data.url != changes.newValue[i].data.url){
+                this.insertPage(changes.newValue[i], i);
+            } else {
+                // update page parameter
+                if(changes.newValue[i].data.latex != changes.oldValue[i].data.latex){
+                    this.pages[i].elPageName.elLatex.innerHTML = changes.newValue[i].data.latex;
+                    this.pages[i].updatePageParameter("latex", changes.newValue[i].data.latex);
+                }
+                // remove old citis
+                for(let k = 0; k < changes.oldValue[i].citis.length; k++){
+                    let stillExists = false;
+                    for(let j = 0; j < changes.newValue[i].citis.length; j++){
+                        if(changes.oldValue[i].citis[k].timestamp == changes.newValue[i].citis[j].timestamp){
+                            stillExists = true;
+                        }
+                    }
+                    if(!stillExists){
+                        this.pages[i].removeCitation(this.pages[i].citations[k]);
+                        changes.oldValue[i].citis.splice(k, 1);
+                    }
+                }
+                // add new citis
+                for(let k = 0; k < changes.newValue[i].citis.length; k++){
+                    if(changes.oldValue[i].citis[k] == undefined || changes.oldValue[i].citis[k].timestamp != changes.newValue[i].citis[k].timestamp){
+                        this.pages[i].insertCitation(changes.newValue[i].citis[k], k);
+                    } else {
+                        // update citi parameter
+                        if(changes.newValue[i].citis[k].comment != changes.oldValue[i].citis[k].comment){
+                            this.pages[i].citations[k].elComment.innerHTML = changes.newValue[i].citis[k].comment;
+                            if(changes.newValue[i].citis[k].comment == "" && !this.pages[i].citations[k].elComment.classList.contains("hidden")){
+                                this.pages[i].citations[k].elComment.classList.add("hidden");
+                            } else if(changes.oldValue[i].citis[k].comment == "" && this.pages[i].citations[k].elComment.classList.contains("hidden")){
+                                this.pages[i].citations[k].elComment.classList.remove("hidden");
+                            }
+                            this.pages[i].citations[k].updateCitiParameter("comment", changes.newValue[i].citis[k].comment);
+                        }
+                    }
+                }
+            }
+        }
+
+        /*  
+        for(let i = 0; i < changes.newValue.length; i++){
+            if(changes.newValue[i].data.latex != changes.oldValue[i].data.latex){
+                this.pages[i].elPageName.elLatex.innerHTML = changes.newValue[i].data.latex;
+                this.pages[i].updatePageParameter("latex", changes.newValue[i].data.latex);
+            }
+            for(let j = 0; j < changes.newValue[i].citis.length; j++){
+                if(changes.newValue[i].citis[j].comment != changes.oldValue[i].citis[j].comment){
+                    this.pages[i].citations[j].elComment.innerHTML = changes.newValue[i].citis[j].comment;
+                    this.pages[i].citations[j].updateCitiParameter("comment", changes.newValue[i].citis[j].comment);
+                }
+            }
+        }
+        */
+    }
+
+    /*
+    updateSettings(changes){
+        console.log("settings", changes);
+    }
+    */
 
     async updateDarkMode(darkmode){
         this.darkmode = darkmode;
@@ -57,7 +155,7 @@ export class UI{
     }
 
     insertPage(page, index){
-        this.pages = this.pages.splice(index, 0, new uiPage(this.el, 0, this, page.data, page.citis, this.helper)).join();
+        this.pages.splice(index, 0, new uiPage(this.el, 0, this, page.data, page.citis, this.helper)).join();
     }
 
     removePage(page){
@@ -74,6 +172,7 @@ export class UI{
                 pages[pages.length - 1].citis.push(citi.citationData);
             }
         }
+        this.alreadyUpdated = true;
         this.saveCallback(pages);
     }
 }
@@ -129,7 +228,7 @@ export class uiPage{
 
 
     insertCitation(citation, index){
-        this.citations = this.citations.splice(index, 0, new uiCitation(this.el, 0, this, this.pageData, citation, this.helper)).join();
+        this.citations.splice(index, 0, new uiCitation(this.el, 0, this, this.pageData, citation, this.helper)).join();
         //this.parent.save();
     }
 
@@ -140,8 +239,8 @@ export class uiPage{
     }
 
 
-    updatePageParameter(page, parameter, value){
-        page.pageData[parameter] = value;
+    updatePageParameter(parameter, value){
+        this.pageData[parameter] = value;
         this.parent.save();
     }
 }
@@ -176,7 +275,7 @@ export class uiCitation{
             this.elComment.classList.add("hidden");
         }
         this.elComment.onblur = (function(event){
-            this.updateCitiParameter(this, "comment", event.target.innerHTML);
+            this.updateCitiParameter("comment", event.target.innerHTML);
         }).bind(this);
 
         this.elIcons = document.createElement("div");
@@ -196,9 +295,9 @@ export class uiCitation{
         this.parent.removeCitation(this);
     }
 
-    updateCitiParameter(citi, parameter, value){
+    updateCitiParameter(parameter, value){
         // ToDo
-        citi.citationData[parameter] = value;
+        this.citationData[parameter] = value;
         this.parent.parent.save();
     }
 }
@@ -260,7 +359,7 @@ export class uiPageName{
         this.el.appendChild(this.elLatex);
         this.elLatex.onblur = (function(event){
             let url = this.pageData.url;
-            this.parent.updatePageParameter(this, "latex", event.target.innerHTML);
+            this.parent.updatePageParameter("latex", event.target.innerHTML);
         }).bind(this);
     }
 
