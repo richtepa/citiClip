@@ -4,7 +4,7 @@ export class Helper{
     settingsPath = "settings";
     sync = true;
 
-    async getTab(){
+    async getActiveTab(){
         return new Promise((resolve, reject) => {
             chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
                 if (chrome.runtime.lastError){
@@ -21,9 +21,20 @@ export class Helper{
                 selected: selected
         });
     }
+
+    async openTab(url){
+        let tabs = await chrome.tabs.query({});
+        for(let tab of tabs){
+            if(tab.url.split("#")[0].split("?")[0] == url.split("#")[0].split("?")[0]){
+                chrome.tabs.update(tab.id, {active: true});
+                return;
+            }
+        }
+        this.openInNewTab(url, true);
+    }
     
     async getURL(long = false){
-        let tab = await this.getTab();
+        let tab = await this.getActiveTab();
         console.log(tab);
         if(long){
             return tab.url;

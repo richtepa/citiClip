@@ -19,7 +19,7 @@ export class UI{
 
         for(let page of pages){
             if(url == undefined || page.data.url == url){
-                this.pages.push(new uiPage(this.el, 0, this, page.data, page.citis));
+                this.pages.push(new uiPage(this.el, 0, this, page.data, page.citis, this.helper));
             }
         }
     }
@@ -57,7 +57,7 @@ export class UI{
     }
 
     insertPage(page, index){
-        this.pages = this.pages.splice(index, 0, new uiPage(this.el, 0, this, page.data, page.citis)).join();
+        this.pages = this.pages.splice(index, 0, new uiPage(this.el, 0, this, page.data, page.citis, this.helper)).join();
     }
 
     removePage(page){
@@ -79,7 +79,8 @@ export class UI{
 }
 
 export class uiPage{
-    constructor(parentElement, elementIndex, parent, pageData, pageCitis){
+    constructor(parentElement, elementIndex, parent, pageData, pageCitis, helper){
+        this.helper = helper;
         this.pageData = pageData;
         this.pageCitis = pageCitis;
         this.parent = parent;
@@ -95,7 +96,7 @@ export class uiPage{
         let citis = this.pageCitis;
         this.citations = [];
         for(let citi of citis){
-            this.citations.push(new uiCitation(this.el, 0, this, this.pageData, citi));
+            this.citations.push(new uiCitation(this.el, 0, this, this.pageData, citi, this.helper));
         }
 
         this.elHr = document.createElement("hr");
@@ -128,7 +129,7 @@ export class uiPage{
 
 
     insertCitation(citation, index){
-        this.citations = this.citations.splice(index, 0, new uiCitation(this.el, 0, this, this.pageData, citation)).join();
+        this.citations = this.citations.splice(index, 0, new uiCitation(this.el, 0, this, this.pageData, citation, this.helper)).join();
         //this.parent.save();
     }
 
@@ -148,7 +149,8 @@ export class uiPage{
 
 
 export class uiCitation{
-    constructor(parentElement, elementIndex, parent, pageData, citationData){
+    constructor(parentElement, elementIndex, parent, pageData, citationData, helper){
+        this.helper = helper;
         this.citationData = citationData;
         this.parent = parent;
         this.pageData = pageData;
@@ -373,11 +375,7 @@ export class uiIcon{
                     }).bind(this), 2500);
                     break;
                 case "open":
-                    //if(text != "undefined"){
-                    //    window.open(url + "#:~:text=" + text, "_blank").focus();
-                    //} else {
-                        window.open(url, "_blank").focus();
-                    //}
+                    this.parent.helper.openTab(url);
                     break;
                 case "delete":
                     this.parent.remove();

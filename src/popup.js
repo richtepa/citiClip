@@ -21,7 +21,7 @@ async function load(){
         }
     }
     if(!isSamePage){
-        helper.openInNewTab("list.html", true);
+        helper.openTab(chrome.runtime.getURL("list.html"), true);
         return;
     }
 
