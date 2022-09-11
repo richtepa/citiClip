@@ -2,18 +2,16 @@ import {Helper} from "./helper.js";
 import {UI} from "./uiElements.js";
 let helper = new Helper();
 
-let ui;
-
 window.onload = function(){
-    showAllCitis();
+    load();
     document.getElementById("page").onclick = function(){
         helper.openInNewTab("list.html", true);
     }
 }
 
-
-async function showAllCitis(){
+async function load(){
     let pages = await helper.loadData();
+    let settings = await helper.loadSettings();
     let url = await helper.getURL();
 
     let isSamePage = false;
@@ -22,12 +20,12 @@ async function showAllCitis(){
             isSamePage = true;
         }
     }
-
     if(!isSamePage){
         helper.openInNewTab("list.html", true);
         return;
     }
-    ui = new UI(document.getElementById("list"), pages, save, url);
+
+    let ui = new UI(document.getElementById("list"), pages, save, url, helper, settings);
 }
 
 async function save(data){

@@ -1,6 +1,7 @@
 export class Helper{
 
-    PATH = "citiClipData";
+    sitedataPath = "citiClipData";
+    settingsPath = "settings";
     sync = true;
 
     async getTab(){
@@ -31,25 +32,52 @@ export class Helper{
         }
     }
 
-    async loadData(){
+    async loadSettings(){
         return new Promise((resolve, reject) => {
-            chrome.storage[this.sync ? "sync": "local"].get([this.PATH], (result) => {
+            chrome.storage[this.sync ? "sync": "local"].get([this.settingsPath], (result) => {
                 if (chrome.runtime.lastError){
                     reject(chrome.runtime.lastError);
                 }
-                if(result[this.PATH]?.citazions == undefined){
+                if(result[this.settingsPath] == undefined){
+                    resolve({});
+                    return;
+                }
+                console.log(result[this.settingsPath]);
+                resolve(result[this.settingsPath]);
+            });
+        });
+    }
+
+    async saveSettings(data){
+        return new Promise((resolve, reject) => {
+            chrome.storage[this.sync ? "sync": "local"].set({ [this.settingsPath]: data }, () => {           
+                if (chrome.runtime.lastError){
+                    reject(chrome.runtime.lastError);
+                }
+                resolve(data);
+            });
+        });
+    }
+
+    async loadData(){
+        return new Promise((resolve, reject) => {
+            chrome.storage[this.sync ? "sync": "local"].get([this.sitedataPath], (result) => {
+                if (chrome.runtime.lastError){
+                    reject(chrome.runtime.lastError);
+                }
+                if(result[this.sitedataPath] == undefined){
                     resolve([]);
                     return;
                 }
-                console.log(result[this.PATH].citazions);
-                resolve(result[this.PATH].citazions);
+                console.log(result[this.sitedataPath]);
+                resolve(result[this.sitedataPath]);
             });
         });
     }
     
     async saveData(data){
         return new Promise((resolve, reject) => {
-            chrome.storage[this.sync ? "sync": "local"].set({ [this.PATH]: {"citazions" : data} }, () => {           
+            chrome.storage[this.sync ? "sync": "local"].set({ [this.sitedataPath]: data}, () => {           
                 if (chrome.runtime.lastError){
                     reject(chrome.runtime.lastError);
                 }

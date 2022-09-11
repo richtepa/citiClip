@@ -1,16 +1,43 @@
 :root{
-    --bg-color: white;
-    --text-color: black;
+    --dark-color-primary: black;
+    --dark-color-secondary: rgb(32,32,32);
+    --light-color-primary: white;
+    --light-color-secondary: rgb(223,223,223);
+    --accent-color: rgb(200, 82, 98);
 }
 
+
+
+body{
+    --bg-color: var(--light-color-primary);
+    --text-color: var(--dark-color-primary);
+}
 @media screen and (prefers-color-scheme: dark) {
-    :root{
-        --bg-color: rgb(32, 32, 32);;
-        --text-color: white;
+    body{
+        --bg-color: var(--dark-color-secondary);
+        --text-color: var(--light-color-primary);
     }
-    .icon{
+    .icon,
+    .settingIcon{
         filter: invert(1);
     }
+}
+
+body.light{
+    --bg-color: var(--light-color-primary);
+    --text-color: var(--dark-color-primary);
+}
+body.light .icon,
+body.light .settingIcon{
+    filter: invert(0);
+}
+body.dark{
+    --bg-color: var(--dark-color-secondary);
+    --text-color: var(--light-color-primary);
+}
+body.dark .icon,
+body.dark .settingIcon{
+    filter: invert(1);
 }
 
 
@@ -109,12 +136,6 @@ a {
 
 
 
-
-
-
-
-
-
 .copy{
     background-image: url("images/icons/copy.svg");
 }
@@ -141,7 +162,8 @@ a {
     background-image: url("images/icons/copyPageDone.svg");
 }
 
-.icon{
+.icon,
+.darkmodeSettings{
     background-position: center;
     background-size: contain;
     height: 1.5em;
@@ -158,4 +180,31 @@ a {
 .icon.action,
 .icons:hover .icon{
     display: block;
+}
+
+
+
+.header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 1em 0;
+}
+
+.settingIcon{
+    height: 3em;
+    width: 3em;
+    margin: 2em;
+    cursor: pointer;
+}
+
+.darkmodeSettings{
+    margin-left: auto;
+    background-image: url("images/icons/darkModeAuto.svg");
+}
+.darkmodeSettings.dark{
+    background-image: url("images/icons/darkMode.svg");
+}
+.darkmodeSettings.light{
+    background-image: url("images/icons/lightMode.svg");
 }

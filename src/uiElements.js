@@ -1,14 +1,59 @@
 export class UI{
-    constructor(parent, pages, saveCallback, url = undefined){
+
+    darkModeOptions = ["auto", "dark", "light"];
+
+    constructor(parent, pages, saveCallback, url = undefined, helper, settings){
+        this.helper = helper;
         this.el = parent;
         this.saveCallback = saveCallback;
         this.pages = [];
+
+        if(settings.darkMode == undefined){
+            settings.darkMode = "auto";
+        }
+        let darkmodeSettings = document.getElementsByClassName("darkmodeSettings")[0];
+        if(darkmodeSettings != undefined){
+            darkmodeSettings.addEventListener("click", this.changeDarkMode.bind(this), false);
+        }
+        this.updateDarkMode(settings.darkMode);
 
         for(let page of pages){
             if(url == undefined || page.data.url == url){
                 this.pages.push(new uiPage(this.el, 0, this, page.data, page.citis));
             }
         }
+    }
+
+    async updateDarkMode(darkmode){
+        this.darkmode = darkmode;
+
+        let body = document.body;
+        let darkmodeSettings = document.getElementsByClassName("darkmodeSettings")[0];
+        
+        for(let setting of this.darkModeOptions){
+            body.classList.remove(setting);
+            if(darkmodeSettings != undefined){
+                darkmodeSettings.classList.remove(setting);
+            }
+        }
+
+        body.classList.add(darkmode);
+        darkmodeSettings.classList.add(darkmode);
+    }
+
+    async changeDarkMode(){
+        let settings = await this.helper.loadSettings();
+
+        let index = this.darkModeOptions.indexOf(this.darkmode);
+        index++;
+        if(index >= this.darkModeOptions.length){
+            index = 0;
+        }
+        settings.darkMode = this.darkModeOptions[index];
+
+        this.helper.saveSettings(settings);
+
+        this.updateDarkMode(this.darkModeOptions[index]);
     }
 
     insertPage(page, index){
